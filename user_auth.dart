@@ -12,21 +12,21 @@ void main() {
       Please select from below:
       1. Create new account
       2. Login with an existing user
-      3. Delete an account
+      3. Delete an acount
       4. Exit
 
     """);
 
     
     try {
-      String? choice = stdin.readLineSync();
+      String? choice = stdin.readLineSync()?.trim();
 
       if(choice == "1") {
         stdout.write("username: ");
-        String? user = stdin.readLineSync();
+        String? user = stdin.readLineSync()?.trim();
 
         stdout.write("Password: ");
-        String? password = stdin.readLineSync();
+        String? password = stdin.readLineSync()?.trim();
 
         if(user == "") {
           print("Please enter a username...");
@@ -61,10 +61,10 @@ void main() {
           print("Attempts left: ${3 - deadCounter}");
 
           stdout.write("user: ");
-          String? user = stdin.readLineSync();
+          String? user = stdin.readLineSync()?.trim();
 
           stdout.write("Password: ");
-          String? password = stdin.readLineSync();
+          String? password = stdin.readLineSync()?.trim();
 
           if(user == null) {
             print("Please enter a username...");
@@ -101,10 +101,10 @@ void main() {
 
       } else if(choice == "3") {
         stdout.write("user: ");
-        String? user = stdin.readLineSync();
+        String? user = stdin.readLineSync()?.trim();
 
         stdout.write("Password: ");
-        String? password = stdin.readLineSync();
+        String? password = stdin.readLineSync()?.trim();
 
 
         if(user == "") {
@@ -130,7 +130,7 @@ void main() {
 
           while (confirmation == null) {
             stdout.write("Are you sure you want tp delete your account(this action can't be reversed)? (y/n) ");
-            confirmation = stdin.readLineSync();
+            confirmation = stdin.readLineSync()?.trim();
 
           }
 
