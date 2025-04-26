@@ -12,7 +12,7 @@ void main() {
       Please select from below:
       1. Create new account
       2. Login with an existing user
-      3. Delete an acount
+      3. Delete an account
       4. Exit
 
     """);
