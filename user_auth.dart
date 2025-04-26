@@ -28,24 +28,29 @@ void main() {
         stdout.write("Password: ");
         String? password = stdin.readLineSync();
 
-        if(user == null) {
+        if(user == "") {
           print("Please enter a username...");
           continue;
 
         } 
-        if(password == null) {
+        if(password == "") {
           print("Please enter a password...");
           continue;  
 
         }
 
-        if(db[user] == null) {
-          db[user] = password;
-          print("Account '$user' Created.");
+        try {
+          if(db[user] == null) {
+            db[user!] = password!;
+            print("Account '$user' Created.");
 
-        } else {
-          print("A user with this username already exists...");
+          } else {
+            print("A user with this username already exists...");
 
+          }
+
+        } catch (e) {
+          print("invalid email or password...");
         }
         
 
