@@ -2,13 +2,14 @@ import "dart:io";
 
 // global repositories ------------------------------
 
-List<String> Questions = [];
-List<String> KeyAnswers = [];
-Map<int, String> Users = {};
-List<int> scores = [];
+List<String> Questions = ["Q1", "Q2", "Q3"];
+List<String> KeyAnswers = ["A1", "A2", "A3"];
+Map<int, String> Users = {0: "Mahmoud"};
+List<int> scores = [0];
 
-// Editor ------------------------------------
+// Quiz Editing ------------------------------------
 
+// adding a question to db
 void addQuestion({required String question, required String correctAnswer}) {
   Questions.add(question);
   KeyAnswers.add(correctAnswer);
@@ -17,13 +18,22 @@ void addQuestion({required String question, required String correctAnswer}) {
 
 }
 
+// removing a question from db using its index
 void removeQuestion({required int qIndex}) {
-  Questions.removeAt(qIndex);
-  KeyAnswers.removeAt(qIndex);
+  try {
+    String name = Questions[qIndex];
 
-  print("Question $qIndex: '${Questions[qIndex]}' removed.");
+    Questions.removeAt(qIndex);
+    KeyAnswers.removeAt(qIndex);
+
+    print("Question $qIndex: '$name' removed.");
+
+  } catch(e) {
+    print("No such question...");
+  }
 }
 
+// get the question at index 'qIndex'
 void getQuestionAt({required int qIndex}) {
   try{
     print("$qIndex: '${Questions[qIndex]}'.");
@@ -33,6 +43,7 @@ void getQuestionAt({required int qIndex}) {
   }
 }
 
+// replace question at 'qIndex' by another
 bool changeQuestion({required int qIndex, required String newQuestion}) {
   try{
     Questions[qIndex] = newQuestion;
@@ -44,6 +55,8 @@ bool changeQuestion({required int qIndex, required String newQuestion}) {
   }
 }
 
+
+// replace correct answer of question at 'qIndex' by another
 bool changeAnswer({required int qIndex, required String newAnswer}) {
   try{
     KeyAnswers[qIndex] = newAnswer;
@@ -55,6 +68,7 @@ bool changeAnswer({required int qIndex, required String newAnswer}) {
   }
 }
 
+// prints all questions in the currunt quiz cleanly
 void printAllQuestions() {
   Questions.asMap().forEach((index, question) {
     print("$index: $question -> ${KeyAnswers[index]}");
@@ -62,17 +76,21 @@ void printAllQuestions() {
 } 
 
 
-// User ----------------------------------
+// play Quiz ----------------------------------
 
+// checks if entered answer matches the set correct one or not
 void evaluateAnswer({required int qIndex, required String userAnswer, required int userIndex}) {
   try {
+
+    // if so, increase that user's score by 1
     if(KeyAnswers[qIndex] == userAnswer) {
       scores[userIndex]++;
 
-      print("Correct Answer!! ✅");
+      print("Correct Answer!! ✅\n");
 
+    // if not, just print incorrect
     } else {
-      print("Wrong answer! ❌");
+      print("Wrong answer! ❌\n");
     }
 
   } catch(e) {
@@ -81,24 +99,27 @@ void evaluateAnswer({required int qIndex, required String userAnswer, required i
   }
 }
 
+// prints the user's final quiz score after finishing or quiting
 void printUserScore({required int userIndex}) {
-  print("'${Users[userIndex]}': you got '${scores[userIndex]}' out of '${Questions.length}'");
-}
-
-// application ----------------------------------
+  print("Well done, '${Users[userIndex]}'!   You got: ${scores[userIndex]} out of ${Questions.length}!");}
 
 
+// User editing ----------------------------------
+
+// add a new playable user to choose
 void createNewUser({required String userName}) {
   try {
     Users[Users.length] = userName;
-    scores[Users.length] = 0;
+    scores.add(0);
     print("Created new user: '$userName'");
 
   } catch(e) {
     print("Can't create user");
+
   }
 }
 
+// remove an existing user at index 'qIndex'
 void removeUser({required int userIndex}) {
   try {
     String name = Users[userIndex]!;
@@ -109,26 +130,31 @@ void removeUser({required int userIndex}) {
   }
 }
 
+// print all available users to choose from
 void printAllusers() {
   Users.forEach((index, username) {
     print("$index: $username");
   });
 }
 
+// print all available users with thier final attempt score
 void getAllUsersWithScores() {
   for(int i = 0; i < Users.length; i++) {
     print("$i. '${Users[i]}' score: ${scores[i]}");
   }
 }
 
+// quiz game loop logic
 void runQuiz({required int userIndex}) {
 
-  print(
-    """
-    === Welcome '${Users[userIndex]}'! =====
+  scores[userIndex] = 0;
 
-    lets start the quiz! (type exit to finish quiz early)
-    """
+  print(
+"""
+
+    === Welcome '${Users[userIndex]}'! ====
+lets start the quiz! (type exit to finish quiz early)
+"""
   );
 
   for(int i = 0; i < Questions.length; i++) {
@@ -137,7 +163,7 @@ void runQuiz({required int userIndex}) {
     String userAnswer = "";
 
     while(true) {
-
+      stdout.write("Your answer: ");
       userAnswer = stdin.readLineSync()!;
 
       if(userAnswer == "") {
@@ -151,28 +177,31 @@ void runQuiz({required int userIndex}) {
     }
 
     if(userAnswer == "exit") {
-      printUserScore(userIndex: userIndex);
       break;
     }
 
     evaluateAnswer(qIndex: i, userAnswer: userAnswer, userIndex: userIndex);
   }
+
+  printUserScore(userIndex: userIndex);
 }
 
 void main() {
 
   while(true) {
     print("""
-            ==== Welcome to Our Quiz Game! ==== 
-    Please select mode: 
-    1. Edit Quiz
-    2. Play quiz
-    3. Edit users
-    0. Exit
-    
+
+    ==== Welcome to Our Quiz Game! ==== 
+Please select mode: 
+1. Edit Quiz
+2. Play quiz
+3. Edit users
+0. Exit
     """); 
 
+    stdout.write("Your choice: ");
     String choice = stdin.readLineSync()!;
+
     if(choice == "" || (choice != "1" && choice != "2" && choice != "3" && choice != "0")) {
       print("Please select from the menu above...");
       continue;
@@ -183,17 +212,18 @@ void main() {
       while(true) {
 
         print("""
-            ==== Editing Quiz ====
-        1. Add question
-        2. Remove question
-        3. Get Question at [index]
-        4. Change question
-        5. Change answer
-        6. Print all questions
-        0. <- Back
 
+    ==== Editing Quiz ====
+1. Add question
+2. Remove question
+3. Get Question at [index]
+4. Change question
+5. Change answer
+6. Print all questions
+0. <- Back
         """);
 
+        stdout.write("Your choice: ");
         String? quizEditorChoice = stdin.readLineSync();
 
         if(choice == "" || (choice != "1" && choice != "2" &&  choice != "3" && choice != "4" && choice != "5" && choice != "6" && choice != "0")) {
@@ -203,7 +233,9 @@ void main() {
 
         try {
           if(quizEditorChoice == "1") {
+            stdout.write("Enter your question: ");
             String questionInput = stdin.readLineSync()!;
+            stdout.write("Enter its correct answer: ");
             String correctAnswerInput = stdin.readLineSync()!;
 
             if(questionInput == "" || correctAnswerInput == "") {
@@ -214,6 +246,7 @@ void main() {
             addQuestion(question: questionInput, correctAnswer: correctAnswerInput);
 
           } else if(quizEditorChoice == "2") {
+            stdout.write("Question index to delete: ");
             int qIndexInput = int.parse(stdin.readLineSync()!);
 
             if(qIndexInput == "") {
@@ -224,6 +257,8 @@ void main() {
             removeQuestion(qIndex: qIndexInput);
 
           } else if(quizEditorChoice == "3") {
+
+            stdout.write("Question index to view: ");
             int qIndexInput = int.parse(stdin.readLineSync()!);
 
             if(qIndexInput == "") {
@@ -234,7 +269,9 @@ void main() {
             getQuestionAt(qIndex: qIndexInput);
 
           } else if(quizEditorChoice == "4") {
+            stdout.write("Question index to change: ");
             int qIndexInput = int.parse(stdin.readLineSync()!);
+            stdout.write("New question: ");
             String newQuestionInput = stdin.readLineSync()!;
 
             if(qIndexInput == "" || newQuestionInput == "" ) {
@@ -245,7 +282,9 @@ void main() {
             changeQuestion(qIndex: qIndexInput, newQuestion: newQuestionInput);
             
           } else if(quizEditorChoice == "5") {
+            stdout.write("Question index to change: ");
             int qIndexInput = int.parse(stdin.readLineSync()!);
+            stdout.write("New Answer: ");
             String newAnswerInput = stdin.readLineSync()!;
 
             if(qIndexInput == "" || newAnswerInput == "" ) {
@@ -256,7 +295,7 @@ void main() {
             changeAnswer(qIndex: qIndexInput, newAnswer: newAnswerInput);
 
           } else if(quizEditorChoice == "6") {
-
+            print("All questions: ");
             printAllQuestions();
 
           } else if(quizEditorChoice == "0") {
@@ -274,16 +313,17 @@ void main() {
       
       print(
         """
-          ==== Quiz started ====
-          Who's playing?
 
+    ==== Quiz started ====
+Who's playing?
         """
       );
 
       while(true) {
-
+        print("All users: ");
         printAllusers();
 
+        stdout.write("Please select a user by index: ");
         int userIndexInput = int.parse(stdin.readLineSync()!);
 
         if(userIndexInput == "") {
@@ -291,6 +331,11 @@ void main() {
           continue;
 
         } else {
+
+          if(Users[userIndexInput] == null) {
+            print("No such user...");
+            break;
+          }
 
           runQuiz(userIndex: userIndexInput);
 
@@ -305,17 +350,19 @@ void main() {
 
         print(
           """
-          ==== Editing users ====
-          1. Create new user
-          2. Delete user
-          3. print all users
-          0. Exit
+
+    ==== Editing users ====
+1. Create new user
+2. Delete user
+3. print all users
+0. Back
           """
         );
 
         String userEditorChoice = "";
 
         while(true) {
+          print("Your choice: ");
           userEditorChoice = stdin.readLineSync()!;
 
           if(userEditorChoice == "" || (userEditorChoice != "1" && userEditorChoice != "2" &&  userEditorChoice != "3" && userEditorChoice != "0")) {
@@ -329,7 +376,7 @@ void main() {
 
         try {
           if(userEditorChoice == "1") {
-            stdout.write("user name: ");
+            stdout.write("New username: ");
             String userName = stdin.readLineSync()!;
 
             if(userName == "") {
@@ -340,6 +387,7 @@ void main() {
             createNewUser(userName: userName);
 
           } else if(userEditorChoice == "2") {
+            print("All users: ");
             printAllusers();
 
             stdout.write("user index to delete: ");
@@ -353,8 +401,8 @@ void main() {
             removeUser(userIndex: userIndex);
 
           } else if(userEditorChoice == "3") {
-
-            printAllusers();
+            print("All users: ");
+            getAllUsersWithScores();
 
           } else if(userEditorChoice == "0") {
             break;
@@ -363,14 +411,17 @@ void main() {
 
         } catch(e) {
           print("invalid input...");
+
         }
       }
 
     } else if(choice == "0") {
       print("Thank you & Good bye! :)");
       break;
+
     } else {
       print(choice);
+
     }
 
    }
