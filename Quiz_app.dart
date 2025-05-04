@@ -172,13 +172,13 @@ void main() {
     
     """); 
 
-    String? choice = stdin.readLineSync();
-    if(choice == "" || (choice != "1" && choice != "2" && choice != "0")) {
+    String choice = stdin.readLineSync()!;
+    if(choice == "" || (choice != "1" && choice != "2" && choice != "3" && choice != "0")) {
       print("Please select from the menu above...");
       continue;
     }
 
-    if(choice == 1) {
+    if(choice == "1") {
 
       while(true) {
 
@@ -270,7 +270,7 @@ void main() {
         }
       }
 
-    } else if(choice == 2) {
+    } else if(choice == "2") {
       
       print(
         """
@@ -299,7 +299,7 @@ void main() {
         }
       }
 
-    } else if (choice == 3) {
+    } else if (choice == "3") {
 
       while(true) {
 
@@ -316,7 +316,7 @@ void main() {
         String userEditorChoice = "";
 
         while(true) {
-          String userEditorChoice = stdin.readLineSync()!;
+          userEditorChoice = stdin.readLineSync()!;
 
           if(userEditorChoice == "" || (userEditorChoice != "1" && userEditorChoice != "2" &&  userEditorChoice != "3" && userEditorChoice != "0")) {
             print("Please select from the menu above...");
@@ -329,7 +329,7 @@ void main() {
 
         try {
           if(userEditorChoice == "1") {
-
+            stdout.write("user name: ");
             String userName = stdin.readLineSync()!;
 
             if(userName == "") {
@@ -340,6 +340,9 @@ void main() {
             createNewUser(userName: userName);
 
           } else if(userEditorChoice == "2") {
+            printAllusers();
+
+            stdout.write("user index to delete: ");
             int userIndex = int.parse(stdin.readLineSync()!);
 
             if(userIndex == "") {
@@ -363,9 +366,11 @@ void main() {
         }
       }
 
-    } else if(choice == 0) {
+    } else if(choice == "0") {
       print("Thank you & Good bye! :)");
       break;
+    } else {
+      print(choice);
     }
 
    }
