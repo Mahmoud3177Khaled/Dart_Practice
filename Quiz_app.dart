@@ -4,8 +4,23 @@ import "dart:io";
 
 // we follow a simple schema in out app, we keep 2 lists: 'Questions' and 'KeyAnswers', 
 // to store and check answer to a specific question with its key answer, where Questions[i] has a key answer at KeyAnswers[i].
-List<String> Questions = ["Q1", "Q2", "Q3"];
-List<String> KeyAnswers = ["A1", "A2", "A3"];
+List<String> Questions = ["What planet is known as the Red Planet?",
+                          "What gas do humans need to breathe?",
+                          "What part of the plant conducts photosynthesis?", 
+                          "What force keeps us on the ground?", 
+                          "What is H2O commonly known as?", 
+                          "Which organ pumps blood through the body?", 
+                          "What do bees collect from flowers to make honey?",
+
+                          ];
+List<String> KeyAnswers = ["Mars",
+                           "Oxygen", 
+                           "Leaves", 
+                           "Gravity", 
+                           "Water", 
+                           "Heart", 
+                           "Nectar"
+                           ];
 
 // we will also need a way to store our app users and to differentiate who is curruntly playing the quiz,
 // i chose to store them in a simple map, where each entry holds the users index (think of at as him id in the whole app) with his name as value,
@@ -111,8 +126,8 @@ void evaluateAnswer({required int qIndex, required String userAnswer, required i
   try {
 
     // we compair if the answer (of the question at qIndex) stored at KeyAnswers[qIndex] matches the user's answer provided
-    // if so, increase that user's score by 1 and congratulate him immediately
-    if(KeyAnswers[qIndex] == userAnswer) {
+    // if so, increase that user's score by 1 and congratulate him immediately (we make it case insenstive cause no one likes to make that mistake...)
+    if(KeyAnswers[qIndex].toLowerCase() == userAnswer.toLowerCase()) {
       Scores[userIndex]++;
 
       print("Correct Answer!! ✅\n");
@@ -218,7 +233,7 @@ lets start the quiz! (type exit to finish quiz early)   -${Questions.length} Que
   for(int i = 0; i < Questions.length; i++) {
 
     // print the question togther with its index to the user to answer, and know where he curruntly is in the quiz
-    print("Q$i: '${Questions[i]}'");
+    print("Q${i+1}: '${Questions[i]}'");
     
     // declare a variable to take the user input of each question in
     String userAnswer = "";
