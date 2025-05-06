@@ -88,7 +88,7 @@ void changeAnswer({required int qIndex, required String newAnswer}) {
     KeyAnswers[qIndex] = newAnswer;
 
   } catch (e) {
-
+    print("No such question...");
   }
 }
 
@@ -441,36 +441,42 @@ Who's playing?
         """
       );
 
-      // infinit loop for taking input in the 'play quiz' section until user chooses 'back'
-      while(true) {
 
-        // printing all users the first thing, to help the user select which user he would like to play as 
-        print("All users: ");
-        printAllusers();
+      try{
 
-        // prompt user for a user index to play as (after printing them all with there indeces, it will be easier to just pick by index)
-        stdout.write("Please select a user by index: ");
-        int userIndexInput = int.parse(stdin.readLineSync()!);
+        // infinit loop for taking input in the 'play quiz' section until user chooses 'back'
+        while(true) {
 
-        // check for empty inputs
-        if(userIndexInput == "") {
-          print("Please select user...");
-          continue;
+          // printing all users the first thing, to help the user select which user he would like to play as 
+          print("All users: ");
+          printAllusers();
 
-        }
+          // prompt user for a user index to play as (after printing them all with there indeces, it will be easier to just pick by index)
+          stdout.write("Please select a user by index: ");
+          int userIndexInput = int.parse(stdin.readLineSync()!);
 
-        // check if user chose a valid user index from the ones he was shown, if not, inform him so, and return to main menu via 'break'
-        if(Users[userIndexInput] == null) {
-          print("No such user...");
+          // check for empty inputs
+          if(userIndexInput == "") {
+            print("Please select user...");
+            continue;
+
+          }
+
+          // check if user chose a valid user index from the ones he was shown, if not, inform him so, and return to main menu via 'break'
+          if(Users[userIndexInput] == null) {
+            print("No such user...");
+            break;
+          }
+
+          // else, if everything is ok, we can finally initiate a quiz with the user index specified, and save him his own score afterwards
+          runQuiz(userIndex: userIndexInput);
+
+          // then, when quiz is done, we head back to main menu
           break;
+
         }
-
-        // else, if everything is ok, we can finally initiate a quiz with the user index specified, and save him his own score afterwards
-        runQuiz(userIndex: userIndexInput);
-
-        // then, when quiz is done, we head back to main menu
-        break;
-
+      } catch(e) {
+        print("No empty inputs allowed...");
       }
 
     // if user chose to edit app users
