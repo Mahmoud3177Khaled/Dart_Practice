@@ -493,7 +493,7 @@ Who's playing?
 1. Create new user
 2. Delete user
 3. print all users
-0. Back
+0. <- Back
           """
         );
 
